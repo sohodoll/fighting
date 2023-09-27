@@ -10,6 +10,7 @@ const gravity = 0.7
 
 class Sprite {
   constructor({ position, velocity, color = 'red', offset }) {
+    this.health = 100
     this.position = position
     this.velocity = velocity
     this.width = 50
@@ -153,10 +154,14 @@ const animate = () => {
 
   if (rectangularCollision({ rectangle1: player, rectangle2: enemy }) && player.isAttacking) {
     player.isAttacking = false
+    enemy.health -= 20
+    document.querySelector('#enemyHealth').style.width = `${enemy.health}%`
   }
 
   if (rectangularCollision({ rectangle1: enemy, rectangle2: player }) && enemy.isAttacking) {
     enemy.isAttacking = false
+    player.health -= 20
+    document.querySelector('#playerHealth').style.width = `${player.health}%`
   }
 }
 
