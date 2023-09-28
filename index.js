@@ -126,6 +126,33 @@ const rectangularCollision = ({ rectangle1, rectangle2 }) => {
   )
 }
 
+const determineWinner = ({ player, enemy, timerId }) => {
+  clearTimeout(timerId)
+  document.querySelector('#displayText').style.display = 'flex'
+  if (player.health === enemy.health) {
+    document.querySelector('#displayText').innerHTML = 'Tie'
+  } else if (player.health > enemy.health) {
+    document.querySelector('#displayText').innerHTML = 'Player 1 Wins'
+  } else {
+    document.querySelector('#displayText').innerHTML = 'Player 2 Wins'
+  }
+}
+
+let timer = 60
+let timerId
+
+const decreaseTimer = () => {
+  if (timer > 0) {
+    timerId = setTimeout(() => {
+      decreaseTimer()
+    }, 1000)
+    timer--
+    document.querySelector('#timer').innerHTML = timer
+  } else if (timer === 0) {
+    determineWinner({ player, enemy, timerId })
+  }
+}
+
 const animate = () => {
   window.requestAnimationFrame(animate)
   c.fillStyle = 'black'
@@ -163,8 +190,15 @@ const animate = () => {
     player.health -= 20
     document.querySelector('#playerHealth').style.width = `${player.health}%`
   }
+
+  // end the game based on health
+
+  if (enemy.health <= 0 || player.health <= 0) {
+    determineWinner({ player, enemy, timerId })
+  }
 }
 
+decreaseTimer()
 animate()
 
 window.addEventListener('keydown', (event) => {
